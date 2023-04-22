@@ -1,34 +1,55 @@
 import java.util.*;
 
 class Solution {
+    int answer=0;
+    int maxAnswer;
     public int solution(String begin, String target, String[] words) {
-        int answer = dfs(begin, target, words, new boolean[words.length], 0, Integer.MAX_VALUE);
-        return answer == Integer.MAX_VALUE ? 0 : answer;
-    }
-    
-    private int dfs(String current, String target, String[] words, boolean[] visited, int count, int minCount) {
-        if (current.equals(target)) {
-            return Math.min(count, minCount);
+        
+        maxAnswer = words.length;
+        if(!firstCheck(target ,words)){
+            return answer;
         }
         
-        for (int i = 0; i < words.length; i++) {
-            if (!visited[i] && isConvertible(current, words[i])) {
-                visited[i] = true;
-                minCount = dfs(words[i], target, words, visited, count + 1, minCount);
-                visited[i] = false;
-            }
-        }
+        ArrayList<String> wordList = new ArrayList<>(Arrays.asList(words));
+        dfs(begin,target,wordList);
         
-        return minCount;
+        return answer;
     }
-    
-    private boolean isConvertible(String str1, String str2) {
-        int count = 0;
-        for (int i = 0; i < str1.length(); i++) {
-            if (str1.charAt(i) != str2.charAt(i)) {
-                count++;
+    public void dfs(String begin , String target , ArrayList<String> wordList){
+        //System.out.println(begin);
+        if(begin.equals(target)){
+            if(answer!=0 && maxAnswer-wordList.size()<answer){
+                answer = maxAnswer-wordList.size();
+            }else if(answer==0){
+                answer = maxAnswer-wordList.size();
+            }
+        }else{
+            for(int i=0;i<wordList.size();i++){
+                int count=0;
+                for(int j=0;j<begin.length();j++){
+                    if(begin.charAt(j)!=wordList.get(i).charAt(j)){
+                        count++;
+                    }
+                    if(count>1){
+                        break;
+                    }
+                }
+                if(count==1){
+                    String nextWord = wordList.get(i);
+                    wordList.remove(i);
+                    dfs(nextWord , target , wordList);
+                    wordList.add(i,nextWord);
+                }
+            }            
+        }
+    }
+    public boolean firstCheck(String target , String[] words){
+        for(String word : words){
+            if(word.equals(target)){
+                return true;
             }
         }
-        return count == 1;
+        return false;
     }
+
 }
