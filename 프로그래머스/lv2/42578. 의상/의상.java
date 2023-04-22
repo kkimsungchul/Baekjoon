@@ -7,11 +7,10 @@ class Solution {
         
         // 의상의 종류별로 갯수를 세어서 Map에 저장합니다.
         for (String[] c : clothes) {
-            String type = c[1];
-            if (!map.containsKey(type)) {
-                map.put(type, 1);
+            if (!map.containsKey(c[1])) {
+                map.put(c[1], 1);
             } else {
-                map.put(type, map.get(type) + 1);
+                map.put(c[1], map.get(c[1]) + 1);
             }
         }
         
